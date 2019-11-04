@@ -2,6 +2,8 @@ package parser;
 
 public class Parser {
 
+	int operatorpos = 0;
+
 	public int findSpaces(char[] exp) {
 		int counter = 0;
 		for (int x = 0; x < exp.length; x++) {
@@ -25,43 +27,63 @@ public class Parser {
 		return newexp;
 	}
 
-	public double findNum1(char[] expression) {
-		double num;
+	public int findNum1(char[] expression) {
+		int num;
 		String number = "";
-		boolean isnegative = false;
-		int start, end;
-		
-		if (expression[1] == '-')
-		{
-			isnegative = true;
+		int start;
+
+		if (expression[1] == '-') {
+			number = number.concat("-");
 			start = 2;
-		}
-		else start = 1;
-		
-		for(int j = start; j < expression.length; j++)
-		{
+		} else
+			start = 1;
+
+		for (int j = start; j < expression.length; j++) {
 			if (Character.isDigit(expression[j]) == true)
 				number = number.concat(expression[j] + "");
-			else break;
+			else {
+				operatorpos = j;
+				break;
+			}
+				
+		}
+
+		num = Integer.parseInt(number);
+		return num;
+	}
+
+	public int findNum2(char[] expression) {
+		int num;
+		int start;
+		String number = "";
+		if (expression[operatorpos + 1] == '-') {
+			number = number.concat("-");
+			start = operatorpos + 2;
+		} else
+			start = operatorpos + 1;
+		for  (int i = start; i < expression.length; i++)
+		{
+			number = number.concat(expression[i] + "");
 		}
 		
-		
+		num = Integer.parseInt(number);
 		return num;
 	}
 
 	public String findOperator(char[] expression) {
 		String type = "";
 
-		for (int j = 0; j < expression.length; j++) {
-			if (expression[j] == '+')
-				type = "add";
-			else if (expression[j] == '*')
-				type = "mult";
-			else if (expression[j] == '/')
-				type = "divi";
-			else if (expression[j] == '-')
-				type = "subtr";
+		
+		if (expression[operatorpos] == '+') {
+			type = "add";
+		} else if (expression[operatorpos] == '*') {
+			type = "mult";	
+		} else if (expression[operatorpos] == '/') {
+			type = "divi";
+		} else if (expression[operatorpos] == '-') {
+			type = "subtr";
 		}
+		
 
 		if (type == "")
 			type = "error";
